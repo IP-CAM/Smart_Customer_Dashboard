@@ -1,0 +1,511 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-gixocaccount" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+  {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+  {% endif %}
+  {% if success %}
+    <div class="alert alert-success"><i class="fa fa-check"></i> {{ success }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+  {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-gixocaccount" class="form-horizontal">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-design" data-toggle="tab"><i class="fa fa-cog"></i> {{ entry_main }}</a></li>
+            <li><a href="#tab-customer" data-toggle="tab"><i class="fa fa-user"></i> {{ entry_customer }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-design">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <select name="gixocaccount_status" id="input-status" class="form-control">
+                  {% if gixocaccount_status %} 
+                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                    <option value="0">{{ text_disabled }}</option>
+                  {% else %}
+                    <option value="1">{{ text_enabled }}</option>
+                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                  {% endif %} 
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-customer">
+              <div class="row">
+                <div class="col-sm-2">
+                    <ul class="nav nav-pills nav-stacked" id="tab-design">
+                        <li class="active"><a href="#tab-groups_customer" data-toggle="tab">{{ entry_groups }}</a></li>
+                        <li><a href="#tab-el_customer" data-toggle="tab">{{ entry_el }}</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-10">
+                   <div class="tab-content">
+                      <div class="tab-pane active" id="tab-groups_customer">
+                        <div class="row">
+                          <div class="form-group">
+                            <div class="pull-right col-sm-4">
+                              <button type="button" onclick="addGroups_customer()" data-toggle="tooltip" class="btn btn-primary"><i class="fa fa-plus-circle"></i> {{ button_groups_add }}</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div id="groups_customer">
+                        {% set groups_customer_row = 0 %}
+                        {% if gixocaccount_groups_customer %}
+                        {% for groups in gixocaccount_groups_customer %}
+                         <div class="well" id="groups_customer-row{{ groups_customer_row }}">
+                          <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger pull-right" onclick="confirm('{{ text_confirm }}') ? $('#groups_customer-row{{ groups_customer_row }}').remove() : false;"><i class="fa fa-trash-o"></i></button>
+                          <input type="hidden" name="gixocaccount_groups_customer[{{ groups_customer_row }}][id]" value="{{ groups_customer_row }}" id="input-id_groups_customer{{ groups_customer_row }}" />
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_name }}</label>
+                              <div class="col-sm-9">
+                                {% for language in languages %}
+                                <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+                                  <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][name][{{ language.language_id }}]" value="{{ attribute(groups.name, language.language_id) }} " placeholder="{{ entry_name }}" class="form-control" />
+                                </div>
+                                {% if error_name.language.language_id %}
+                                <div class="text-danger">{{ error_name.language.language_id }}</div>
+                                {% endif %}{% endfor %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_class_el }}</label>
+                              <div class="col-sm-9">
+                                <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][class_el]" value="{{ groups.class_el }}" placeholder="{{ entry_class_el }}" id="input-class-el" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_sort_order }}</label>
+                              <div class="col-sm-1">
+                                <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][sort_order]" value="{{ groups.sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+                              </div>                              
+                              <label class="col-sm-2 control-label">{{ entry_color }}</label>
+                              <div class="col-sm-2">
+                                <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][color]" value="{{ groups.color }}" placeholder="{{ entry_color }}" id="input-color" size="6" class="color {required:false,hash:true} form-control" />
+                              </div>
+                              <label class="col-sm-2 control-label">{{ entry_color_hover }}</label>
+                              <div class="col-sm-2">
+                                <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][color_hover]" value="{{ groups.color_hover }}" placeholder="{{ entry_color_hover }}" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_status }}</label>
+                              <div class="col-sm-2">
+                                <select name="gixocaccount_groups_customer[{{ groups_customer_row }}][status]" id="input-status" class="form-control">
+                                {% if groups.status %}
+                                  <option value="1" selected="selected">{{ text_enabled }}</option>
+                                  <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                  <option value="1">{{ text_enabled }}</option>
+                                  <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                                </select>
+                              </div>
+                              <label class="col-sm-1 control-label">{{ entry_font }}</label>
+                              <div class="col-sm-2">
+                                <div class="input-group">
+                                  <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][font]" value="{{ groups.font }}" placeholder="{{ entry_font }}" id="input-font" class="form-control" />
+                                  <span class="input-group-addon">px</span>
+                                </div>
+                              </div>
+                              <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="{{ help_info_font }}">{{ entry_font_hover }}</span></label>
+                              <div class="col-sm-2">
+                                <div class="input-group">
+                                  <input type="text" name="gixocaccount_groups_customer[{{ groups_customer_row }}][font_hover]" value="{{ groups.font_hover }}" placeholder="{{ entry_font_hover }}" id="input-font-hover" class="form-control" />
+                                  <span class="input-group-addon">px</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                         </div>
+                        {% set groups_customer_row = groups_customer_row + 1 %}
+                        {% endfor %}{% endif %}
+                        </div>
+                      </div>
+                      <div class="tab-pane" id="tab-el_customer">
+                        <div class="row">
+                          <div class="form-group">
+                            <div class="pull-right col-sm-4">
+                              <button type="button" onclick="addEl_customer()" data-toggle="tooltip" class="btn btn-primary"><i class="fa fa-plus-circle"></i> {{ button_el_add }}</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div id="el_customer">
+                        {% set el_customer_row = 0 %}
+                        {% if gixocaccount_el_customer %}
+                        {% for el in gixocaccount_el_customer %}
+                         <div class="well" id="el_customer-row{{ el_customer_row }}">
+                          <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger pull-right" onclick="confirm('{{ text_confirm }}') ? $('#el_customer-row{{ el_customer_row }}').remove() : false;"><i class="fa fa-trash-o"></i></button>
+                          <input type="hidden" name="gixocaccount_el_customer[{{ el_customer_row }}][id]" value="{{ el_customer_row }}" id="input-id_el_customer{{ el_customer_row }}" />
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_name }}</label>
+                              <div class="col-sm-9">
+                                {% for language in languages %}
+                                <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+                                  <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][name][{{ language.language_id }}]" value="{{ attribute(el.name, language.language_id) }} " placeholder="{{ entry_name }}" class="form-control" />
+                                </div>
+                                {% if error_name.language.language_id %}
+                                <div class="text-danger">{{ error_name.language.language_id }}</div>
+                                {% endif %}{% endfor %}
+                              </div>
+                            </div>
+                          </div>
+ 
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_group }}</label>
+                              <div class="col-sm-5">
+                                <select name="gixocaccount_el_customer[{{ el_customer_row }}][customer_group_id]" id="input-gixocscd-group" class="form-control">
+                                {% for customer_group in gixocaccount_groups_customer %}
+                                  {% if customer_group.id ==  el.customer_group_id %}
+                                    <option value="{{ customer_group.id }}" selected="selected">{{ attribute(customer_group.name, language_id) }}</option>
+                                   {% else %}
+                                    <option value="{{ customer_group.id }}">{{ attribute(customer_group.name, language_id) }}</option>
+                                  {% endif %}
+                                {% endfor %}
+                                </select>
+                              </div>
+                              <label class="col-sm-2 control-label">{{ entry_sort_order }}</label>
+                              <div class="col-sm-2">
+                                <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][sort_order]" value="{{ el.sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_image }}</label>
+                              <div class="col-sm-2">
+                                <a href="" id="thumb-image_el_customer{{ el_customer_row }}" data-toggle="image" class="img-thumbnail"><img src="{{ el.thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="gixocaccount_el_customer[{{ el_customer_row }}][image]" value="{{ el.image }}" id="input-image_el_customer{{ el_customer_row }}" />                            
+                              </div>
+                              <label class="col-sm-2 control-label">{{ entry_image_description }}</label>
+                              <div class="col-sm-5">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][image_width]" value="{{ el.image_width }}" placeholder="{{ entry_width }}" class="form-control" />
+                                  </div>
+                                  <div class="col-sm-6">
+                                   <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][image_height]" value="{{ el.image_height }}" placeholder="{{ entry_height }}" class="form-control" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_class_el }}</label>
+                              <div class="col-sm-5">
+                                <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][class_el]" value="{{ el.class_el }}" placeholder="{{ entry_class_el }}" id="input-class-el" class="form-control" />
+                              </div>
+                              <label class="col-sm-2 control-label">{{ entry_color }}</label>
+                              <div class="col-sm-2">
+                                <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][color]" value="{{ el.color }}" placeholder="{{ entry_color }}" id="input-color" size="6" class="color {required:false,hash:true} form-control" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_url }}</label>
+                              <div class="col-sm-5">
+                                <div class="input-group">
+                                  <span class="input-group-addon">{{ domain }}</span>
+                                  <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][url]" value="{{ el.url }}" placeholder="{{ entry_url }}" id="input-url" class="form-control" />
+                                </div>
+                              </div>                            
+                              <label class="col-sm-2 control-label">{{ entry_color_hover }}</label>
+                              <div class="col-sm-2">
+                                <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][color_hover]" value="{{ el.color_hover }}" placeholder="{{ entry_color_hover }}" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="row">
+                              <label class="col-sm-2 control-label">{{ entry_status }}</label>
+                              <div class="col-sm-2">
+                                <select name="gixocaccount_el_customer[{{ el_customer_row }}][status]" id="input-status" class="form-control">
+                                {% if el.status %}
+                                  <option value="1" selected="selected">{{ text_enabled }}</option>
+                                  <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                  <option value="1">{{ text_enabled }}</option>
+                                  <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                                </select>
+                              </div>
+                              <label class="col-sm-1 control-label">{{ entry_font }}</label>
+                              <div class="col-sm-2">
+                                <div class="input-group">
+                                  <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][font]" value="{{ el.font }}" placeholder="{{ entry_font }}" id="input-font" class="form-control" />
+                                  <span class="input-group-addon">px</span>
+                                </div>
+                              </div>
+                              <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="{{ help_info_font }}">{{ entry_font_hover }}</span></label>
+                              <div class="col-sm-2">
+                                <div class="input-group">
+                                  <input type="text" name="gixocaccount_el_customer[{{ el_customer_row }}][font_hover]" value="{{ el.font_hover }}" placeholder="{{ entry_font_hover }}" id="input-font-hover" class="form-control" />
+                                  <span class="input-group-addon">px</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                         </div>    
+                        {% set el_customer_row = el_customer_row + 1 %}
+                        {% endfor %}{% endif %}
+                        </div>
+                      </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="view/javascript/jscolor/jscolor.js"></script>
+<script type="text/javascript"><!--
+{% if gixocaccount_groups_customer == empty%}
+$(document).ready(function() {
+    addGroups_customer()
+});
+{% endif %}
+
+{% if gixocaccount_el_customer == empty%}
+$(document).ready(function() {
+    addEl_customer()
+});
+{% endif %}
+
+var groups_customer_row = {{ groups_customer_row }};
+
+function addGroups_customer() {
+html = '                         <div class="well" id="groups_customer-row' + groups_customer_row + '">';
+html += '                          <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger pull-right" onclick="confirm(\'{{ text_confirm }}\') ? $(\'#groups_customer-row' + groups_customer_row + '\').remove() : false;"><i class="fa fa-trash-o"></i></button>';
+html += '                          <input type="hidden" name="gixocaccount_groups_customer[' + groups_customer_row + '][id]" value="' + groups_customer_row + '" id="input-id_groups_customer' + groups_customer_row + '" />';
+html += '                          <div class="form-group">';
+html += '                            <div class="row">';
+html += '                              <label class="col-sm-2 control-label">{{ entry_name }}</label>';
+html += '                              <div class="col-sm-9">';
+html += '                              {% for language in languages %}';
+html += '                                <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>';
+html += '                                  <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][name][{{ language.language_id }}]" value="" placeholder="{{ entry_name }}" class="form-control" />';
+html += '                                </div>';
+html += '                                {% if error_name.language.language_id %}';
+html += '                                <div class="text-danger">{{ error_name.language.language_id }}</div>';
+html += '                                {% endif %}';
+html += '                              {% endfor %}';
+html += '                              </div>';
+html += '                            </div>';
+html += '                          </div>';
+html += '                          <div class="form-group">';
+html += '                            <div class="row">';
+html += '                              <label class="col-sm-2 control-label">{{ entry_class_el }}</label>';
+html += '                              <div class="col-sm-9">';
+html += '                                <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][class_el]" value="h2" placeholder="{{ entry_class_el }}" id="input-class-el" class="form-control" />';
+html += '                              </div>';
+html += '                            </div>';
+html += '                          </div>';
+html += '                          <div class="form-group">';
+html += '                            <div class="row">';
+html += '                             <label class="col-sm-2 control-label">{{ entry_sort_order }}</label>';
+html += '                             <div class="col-sm-1">';
+html += '                               <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][sort_order]" value="" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />';
+html += '                             </div>';
+html += '                             <label class="col-sm-2 control-label">{{ entry_color }}</label>';
+html += '                             <div class="col-sm-2">';
+html += '                               <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][color]" value="#000000" id="input-color" size="6" class="color {required:false,hash:true} form-control" />';
+html += '                             </div>';
+html += '                              <label class="col-sm-2 control-label">{{ entry_color_hover }}</label>';
+html += '                              <div class="col-sm-2">';
+html += '                                <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][color_hover]" value="#000000" placeholder="{{ entry_color_hover }}" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />';
+html += '                              </div>';
+html += '                            </div>';
+html += '                          </div>';
+html += '                          <div class="form-group">';
+html += '                            <div class="row">';
+html += '                              <label class="col-sm-2 control-label">{{ entry_status }}</label>';
+html += '                              <div class="col-sm-2">';
+html += '                                <select name="gixocaccount_groups_customer[' + groups_customer_row + '][status]" id="input-status" class="form-control">';
+html += '                                  <option value="1">{{ text_enabled }}</option>';
+html += '                                  <option value="0" selected="selected">{{ text_disabled }}</option>';
+html += '                                </select>';
+html += '                              </div>';
+html += '                              <label class="col-sm-1 control-label">{{ entry_font }}</label>';
+html += '                              <div class="col-sm-2">';
+html += '                                <div class="input-group">';
+html += '                                  <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][font]" value="27" placeholder="{{ entry_font }}" id="input-font" class="form-control" />';
+html += '                                  <span class="input-group-addon">px</span>';
+html += '                                </div>';
+html += '                              </div>';
+html += '                              <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="{{ help_info_font }}">{{ entry_font_hover }}</span></label>';
+html += '                              <div class="col-sm-2">';
+html += '                                <div class="input-group">';
+html += '                                  <input type="text" name="gixocaccount_groups_customer[' + groups_customer_row + '][font_hover]" value="28" placeholder="{{ entry_font_hover }}" id="input-font-hover" class="form-control" />';
+html += '                                  <span class="input-group-addon">px</span>';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                          </div>';
+html += '                         </div>';
+
+    $('#groups_customer').append(html);
+    $([document.documentElement, document.body]).animate({
+      scrollTop: $('#groups_customer-row' + groups_customer_row).offset().top
+    }, 2000);
+    groups_customer_row++;
+}
+
+var el_customer_row = {{ el_customer_row }};
+
+function addEl_customer() {
+html = '                         <div class="well" id="el_customer-row' + el_customer_row + '">';
+html += '                          <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger pull-right" onclick="confirm(\'{{ text_confirm }}\') ? $(\'#el_customer-row' + el_customer_row + '\').remove() : false;"><i class="fa fa-trash-o"></i></button>';
+html += '                          <input type="hidden" name="gixocaccount_el_customer[' + el_customer_row + '][id]" value="' + el_customer_row + '" id="input-id_el_customer' + el_customer_row + '" />';
+html += '                            <div class="form-group">';
+html += '                              <div class="row">';
+html += '                                <label class="col-sm-2 control-label">{{ entry_name }}</label>';
+html += '                                <div class="col-sm-9">';
+html += '                                {% for language in languages %}';
+html += '                                  <div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>';
+html += '                                    <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][name][{{ language.language_id }}]" value="" placeholder="{{ entry_name }}" class="form-control" />';
+html += '                                  </div>';
+html += '                                  {% if error_name.language.language_id %}';
+html += '                                  <div class="text-danger">{{ error_name.language.language_id }}</div>';
+html += '                                  {% endif %}';
+html += '                                {% endfor %}';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                            <div class="form-group">';
+html += '                              <div class="row">';
+html += '                                <label class="col-sm-2 control-label">{{ entry_group }}</label>';
+html += '                                <div class="col-sm-5">';
+html += '                                  <select name="gixocaccount_el_customer[' + el_customer_row + '][customer_group_id]" id="input-gixocscd-group" class="form-control">';
+html += '                                  {% for customer_group in gixocaccount_groups_customer %}';
+html += '                                    <option value="{{ customer_group.id }}">{{ attribute(customer_group.name, language_id) }}</option>';
+html += '                                  {% endfor %}';
+html += '                                  </select>';
+html += '                                </div>';
+html += '                                <label class="col-sm-2 control-label">{{ entry_sort_order }}</label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][sort_order]" value="{{ el.sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                            <div class="form-group">';
+html += '                              <div class="row">';
+html += '                                <label class="col-sm-2 control-label">{{ entry_image }}</label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <a href="" id="thumb-image_el_customer' + el_customer_row + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="gixocaccount_el_customer[' + el_customer_row + '][image]" value="{{ el.image }}" id="input-image_el_customer' + el_customer_row + '" />';
+html += '                                </div>';
+html += '                                <label class="col-sm-2 control-label">{{ entry_image_description }}</label>';
+html += '                                <div class="col-sm-5">';
+html += '                                  <div class="row">';
+html += '                                    <div class="col-sm-6">';
+html += '                                      <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][image_width]" value="64" placeholder="{{ entry_width }}" class="form-control" />';
+html += '                                    </div>';
+html += '                                    <div class="col-sm-6">';
+html += '                                      <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][image_height]" value="64" placeholder="{{ entry_height }}" class="form-control" />';
+html += '                                    </div>';
+html += '                                  </div>';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                            <div class="form-group">';
+html += '                              <div class="row">';
+html += '                                <label class="col-sm-2 control-label">{{ entry_class_el }}</label>';
+html += '                                <div class="col-sm-5">';
+html += '                                  <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][class_el]" value="col-lg-2 col-md-3 col-sm-4 col-xs-6 text-center" placeholder="{{ entry_class_el }}" id="input-class-el" class="form-control" />';
+html += '                                </div>';
+html += '                                <label class="col-sm-2 control-label">{{ entry_color }}</label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][color]" value="#000000" placeholder="{{ entry_color }}" id="input-color" size="6" class="color {required:false,hash:true} form-control" />';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                            <div class="form-group">';
+html += '                              <div class="row">';
+html += '                                <label class="col-sm-2 control-label">{{ entry_url }}</label>';
+html += '                                <div class="col-sm-5">';
+html += '                                  <div class="input-group">';
+html += '                                    <span class="input-group-addon">{{ domain }}</span>';
+html += '                                    <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][url]" value="" placeholder="{{ entry_url }}" id="input-url" class="form-control" />';
+html += '                                  </div>';
+html += '                                </div>';
+html += '                                <label class="col-sm-2 control-label">{{ entry_color_hover }}</label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][color_hover]" value="#000000" placeholder="{{ entry_color_hover }}" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                            <div class="form-group">';
+html += '                              <div class="row">';
+html += '                                <label class="col-sm-2 control-label">{{ entry_status }}</label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <select name="gixocaccount_el_customer[' + el_customer_row + '][status]" id="input-status" class="form-control">';
+html += '                                    <option value="1">{{ text_enabled }}</option>';
+html += '                                    <option value="0" selected="selected">{{ text_disabled }}</option>';
+html += '                                  </select>';
+html += '                                </div>';
+html += '                                <label class="col-sm-1 control-label">{{ entry_font }}</label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <div class="input-group">';
+html += '                                    <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][font]" value="14" placeholder="{{ entry_font }}" id="input-font" class="form-control" />';
+html += '                                    <span class="input-group-addon">px</span>';
+html += '                                  </div>';
+html += '                                </div>';
+html += '                                <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="{{ help_info_font }}">{{ entry_font_hover }}</span></label>';
+html += '                                <div class="col-sm-2">';
+html += '                                  <div class="input-group">';
+html += '                                    <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][font_hover]" value="15" placeholder="{{ entry_font_hover }}" id="input-font-hover" class="form-control" />';
+html += '                                    <span class="input-group-addon">px</span>';
+html += '                                  </div>';
+html += '                                </div>';
+html += '                              </div>';
+html += '                            </div>';
+html += '                          </div> ';
+
+    $('#el_customer').append(html);
+    $([document.documentElement, document.body]).animate({
+      scrollTop: $('#el_customer-row' + el_customer_row).offset().top
+    }, 2000);
+    el_customer_row++;
+}
+//--></script>
+{{ footer }}

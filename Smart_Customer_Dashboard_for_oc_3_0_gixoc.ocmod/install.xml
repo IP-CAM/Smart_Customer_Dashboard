@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<name><![CDATA[GixOC.ru - <b>Smart Customer Dashboard</b>]]></name>
+	<code>GixOC_Smart_Customer_Dashboard</code>
+	<version>3.2</version>
+	<author><![CDATA[<font color="#3399FF"><a href="https://gixoc.ru">GixOC.ru</font>]]></author>
+	<link>https://gixoc.ru</link>
+	
+	<file path="catalog/controller/account/account.php">
+		<operation>
+			<search><![CDATA[$this->load->language('account/account');]]></search>
+				<add position="before"><![CDATA[		$data['status'] = $this->config->get('gixocaccount_status');
+		if ($data['status']) {
+			return $this->load->controller('extension/module/gixocaccount');
+		}]]></add>
+		</operation> 
+	</file>
+</modification>

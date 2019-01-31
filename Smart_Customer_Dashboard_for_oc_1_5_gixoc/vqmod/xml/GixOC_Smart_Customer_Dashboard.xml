@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<id><![CDATA[GixOC.ru - <b>Smart Customer Dashboard</b>]]></id>
+	<version>3.2</version>
+	<author><![CDATA[<font color="#3399FF"><a href="https://gixoc.ru">GixOC.ru</font>]]></author>
+
+	<file name="catalog/controller/account/account.php">   
+		<operation>
+			<search position="before"><![CDATA[$this->language->load('account/account');]]></search> 
+				<add><![CDATA[		$status = $this->config->get('gixocaccount_status');
+		if ($status) {
+			$this->redirect($this->url->link('account/gixocaccount', '', 'SSL'));
+		}]]></add>
+		</operation> 
+	</file>
+	<file name="catalog/controller/affiliate/account.php">   
+		<operation>
+			<search position="before"><![CDATA[$this->language->load('affiliate/account');]]></search> 
+				<add><![CDATA[		$status = $this->config->get('gixocaccount_status');
+		if ($status) {
+			$this->redirect($this->url->link('affiliate/gixocaccount', '', 'SSL'));
+		}]]></add>
+		</operation> 
+	</file>
+</modification>
