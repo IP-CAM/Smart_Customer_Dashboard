@@ -2,26 +2,464 @@
 <modification>
 	<name><![CDATA[GixOC.ru - <b>Smart Customer Dashboard</b>]]></name>
 	<code>GixOC_Smart_Customer_Dashboard</code>
-	<version>3.2</version>
+	<version>3.4</version>
 	<author><![CDATA[<font color="#3399FF"><a href="https://gixoc.ru">GixOC.ru</font>]]></author>
 	<link>https://gixoc.ru</link>
 	
 	<file path="catalog/controller/account/account.php">
-		<operation>
-			<search><![CDATA[$this->load->language('account/account');]]></search>
-				<add position="before"><![CDATA[		$data['status'] = $this->config->get('gixocaccount_status');
-		if ($data['status']) {
-			return $this->load->controller('account/gixocaccount');
+		<operation error="skip">
+			<search><![CDATA[$this->response->setOutput($this->load->view('default/template/account/account.tpl', $data));]]></search>
+			<add position="after" offset="1"><![CDATA[
+		if ($this->config->get('gixocaccount_status')) {
+			$groups = array();
+			$els = array();
+			$els_css = '';
+
+			$this->load->model('tool/image');
+
+			$language_id = $this->config->get('config_language_id');
+
+			$groups = $this->config->get('gixocaccount_groups_customer');
+			$els = $this->config->get('gixocaccount_el_customer');
+
+			foreach ($groups as $group) {
+				if ($group['status']){
+					foreach ($els as $el) {
+						if (($el['status']) && ($el['customer_group_id'] == $group['id'])) {
+							if (is_file(DIR_IMAGE . $el['image'])) {
+								$image = $this->model_tool_image->resize($el['image'], $el['image_width'], $el['image_height']);
+							} else {
+								$image = $this->model_tool_image->resize('no_image.png', 64, 64);
+							};
+
+							$els_css .= '#el' . $el['id'] . '{color: ' . $el['color'] . '; font-size: ' . $el['font'] . 'px;}';
+							$els_css .= '#el' . $el['id'] . ':hover{color: ' . $el['color_hover'] . '; font-size: ' . $el['font_hover'] . 'px;}';
+
+							$names = $el['name'][$language_id];
+
+							$sort_order = $el['sort_order'];
+
+							$el_data[] = array(
+								'name'        => $names,
+								'id'          => 'el' . $el['id'],
+								'url'         => $el['url'],
+								'image'       => $image,
+								'class_el'    => $el['class_el'],
+								'sort_order'  => $el['sort_order']
+							);
+						}
+					}
+
+					$sort_order = array();
+
+					foreach ($el_data as $key => $value) {
+						$sort_order[$key] = $value['sort_order'];
+					}
+
+					array_multisort($sort_order, SORT_ASC, $el_data);
+
+					$data['groups'][] = array(
+						'id'                  => 'group' . $group['id'],
+						'sort_order'          => $group['sort_order'],
+						'name'                => $group['name'][$language_id],
+						'class_el'            => $group['class_el'],
+						'els'                 => $el_data
+					);
+
+					$els_css .= '#group' . $group['id'] . '{color: ' . $group['color'] . '; font-size: ' . $group['font'] . 'px;}';
+					$els_css .= '#group' . $group['id'] . ':hover{color: ' . $group['color_hover'] . '; font-size: ' . $group['font_hover'] . 'px;}';
+
+					$el_data = array();
+				};
+			};
+
+			$sort_order = array();
+
+			foreach ($data['groups'] as $key => $value) {
+				$sort_order[$key] = $value['sort_order'];
+			}
+
+			array_multisort($sort_order, SORT_ASC, $data['groups']);
+
+			$data['els_css'] = $els_css . $this->config->get('gixocaccount_css');
+
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/gixocaccount.tpl')) {
+				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/module/gixocaccount.tpl', $data));
+			} else {
+				$this->response->setOutput($this->load->view('default/template/module/gixocaccount.tpl', $data));
+			}
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/affiliate/account.php"> 
+		<operation error="skip">
+			<search><![CDATA[$this->response->setOutput($this->load->view('default/template/affiliate/account.tpl', $data));]]></search>
+			<add position="after" offset="1"><![CDATA[
+		if ($this->config->get('gixocaccount_status')) {
+			$groups = array();
+			$els = array();
+			$els_css = '';
+
+			$this->load->model('tool/image');
+
+			$language_id = $this->config->get('config_language_id');
+
+			$groups = $this->config->get('gixocaccount_groups_affiliate');
+			$els = $this->config->get('gixocaccount_el_affiliate');
+
+			foreach ($groups as $group) {
+				if ($group['status']){
+					foreach ($els as $el) {
+						if (($el['status']) && ($el['affiliate_group_id'] == $group['id'])) {
+							if (is_file(DIR_IMAGE . $el['image'])) {
+								$image = $this->model_tool_image->resize($el['image'], $el['image_width'], $el['image_height']);
+							} else {
+								$image = $this->model_tool_image->resize('no_image.png', 64, 64);
+							};
+
+							$els_css .= '#el' . $el['id'] . '{color: ' . $el['color'] . '; font-size: ' . $el['font'] . 'px;}';
+							$els_css .= '#el' . $el['id'] . ':hover{color: ' . $el['color_hover'] . '; font-size: ' . $el['font_hover'] . 'px;}';
+
+							$names = $el['name'][$language_id];
+
+							$sort_order = $el['sort_order'];
+
+							$el_data[] = array(
+								'name'        => $names,
+								'id'          => 'el' . $el['id'],
+								'url'         => $el['url'],
+								'image'       => $image,
+								'class_el'    => $el['class_el'],
+								'sort_order'  => $el['sort_order']
+							);
+						}
+					}
+
+					$sort_order = array();
+
+					foreach ($el_data as $key => $value) {
+						$sort_order[$key] = $value['sort_order'];
+					}
+
+					array_multisort($sort_order, SORT_ASC, $el_data);
+
+					$data['groups'][] = array(
+						'id'                  => 'group' . $group['id'],
+						'sort_order'          => $group['sort_order'],
+						'name'                => $group['name'][$language_id],
+						'class_el'            => $group['class_el'],
+						'els'                 => $el_data
+					);
+
+					$els_css .= '#group' . $group['id'] . '{color: ' . $group['color'] . '; font-size: ' . $group['font'] . 'px;}';
+					$els_css .= '#group' . $group['id'] . ':hover{color: ' . $group['color_hover'] . '; font-size: ' . $group['font_hover'] . 'px;}';
+				
+					$el_data = array();
+				};
+			};
+
+			$sort_order = array();
+
+			foreach ($data['groups'] as $key => $value) {
+				$sort_order[$key] = $value['sort_order'];
+			}
+
+			array_multisort($sort_order, SORT_ASC, $data['groups']);
+
+			$data['els_css'] = $els_css . $this->config->get('gixocaccount_css');
+
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/gixocaccount.tpl')) {
+				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/module/gixocaccount.tpl', $data));
+			} else {
+				$this->response->setOutput($this->load->view('default/template/module/gixocaccount.tpl', $data));
+			}
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/module/account.php">
+		<operation error="skip">
+			<search><![CDATA[if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/account.tpl')) {]]></search>
+			<add position="before"><![CDATA[		if ($this->config->get('gixocaccount_status')) {
+		$els = array();
+		$els_css = '';
+
+		$language_id = $this->config->get('config_language_id');
+
+		$els = $this->config->get('gixocaccount_module_customer');
+		foreach ($els as $el) {
+			if ($el['status']) {
+				$els_css .= '#mod' . $el['id'] . '{color: ' . $el['color'] . '; font-size: ' . $el['font'] . 'px;}';
+				$els_css .= '#mod' . $el['id'] . ':hover{color: ' . $el['color_hover'] . '; font-size: ' . $el['font_hover'] . 'px;}';
+
+				$names = $el['name'][$language_id];
+
+				$sort_order = $el['sort_order'];
+
+				$el_data[] = array(
+					'id'          => 'mod' . $el['id'],
+					'name'        => $names,
+					'url'         => $el['url'],
+					'class_el'    => $el['class_el'],
+					'sort_order'  => $el['sort_order']
+				);
+			}
+		}
+
+		$sort_order = array();
+
+		foreach ($el_data as $key => $value) {
+			$sort_order[$key] = $value['sort_order'];
+		}
+
+		array_multisort($sort_order, SORT_ASC, $el_data);
+
+		$data['els'] = $el_data;
+
+		$data['els_css'] = $els_css . $this->config->get('gixocaccount_css');
+
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/gixocaccount.tpl')) {
+			return $this->load->view($this->config->get('config_template') . '/template/module/gixocaffiliate.tpl', $data);
+		} else {
+			return $this->load->view('default/template/module/gixocaffiliate.tpl', $data);
+		}
 		}]]></add>
 		</operation> 
 	</file>
-	<file path="catalog/controller/affiliate/account.php">
-		<operation>
-			<search><![CDATA[$this->load->language('affiliate/account');]]></search>
-				<add position="before"><![CDATA[		$data['status'] = $this->config->get('gixocaccount_status');
-		if ($data['status']) {
-			return $this->load->controller('affiliate/gixocaccount');
+	<file path="catalog/controller/module/affiliate.php">
+		<operation error="skip">
+			<search><![CDATA[if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/affiliate.tpl')) {]]></search>
+			<add position="before"><![CDATA[		if ($this->config->get('gixocaccount_status')) {
+		$els = array();
+		$els_css = '';
+
+		$language_id = $this->config->get('config_language_id');
+
+		$els = $this->config->get('gixocaccount_module_affiliate');
+		foreach ($els as $el) {
+			if ($el['status']) {
+				$els_css .= '#mod' . $el['id'] . '{color: ' . $el['color'] . '; font-size: ' . $el['font'] . 'px;}';
+				$els_css .= '#mod' . $el['id'] . ':hover{color: ' . $el['color_hover'] . '; font-size: ' . $el['font_hover'] . 'px;}';
+
+				$names = $el['name'][$language_id];
+
+				$sort_order = $el['sort_order'];
+
+				$el_data[] = array(
+					'id'          => 'mod' . $el['id'],
+					'name'        => $names,
+					'url'         => $el['url'],
+					'class_el'    => $el['class_el'],
+					'sort_order'  => $el['sort_order']
+				);
+			}
+		}
+
+		$sort_order = array();
+
+		foreach ($el_data as $key => $value) {
+			$sort_order[$key] = $value['sort_order'];
+		}
+
+		array_multisort($sort_order, SORT_ASC, $el_data);
+
+		$data['els'] = $el_data;
+
+		$data['els_css'] = $els_css . $this->config->get('gixocaccount_css');
+
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/gixocaccount.tpl')) {
+			return $this->load->view($this->config->get('config_template') . '/template/module/gixocaffiliate.tpl', $data);
+		} else {
+			return $this->load->view('default/template/module/gixocaffiliate.tpl', $data);
+		}
 		}]]></add>
 		</operation> 
+	</file>
+	<!-- fixs for Back controller customer -->
+	<file path="catalog/controller/account/wishlist.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation> 
+	</file>
+	<file path="catalog/controller/account/order.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/account/download.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/account/reward.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/account/return.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/account/transaction.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/account/recurring.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('account/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation>
+	</file>
+	<!-- fix for Simple controller -->
+	<file path="catalog/controller/account/simpleedit.php">
+		<operation error="skip">
+			<search><![CDATA[$this->_templateData['simple_header'] = $this->simpleedit->getLinkToHeaderTpl();]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+            $this->_templateData['status_back'] = true;
+			$this->_templateData['button_back'] = $this->language->get('button_back');
+			$this->_templateData['back'] = $this->url->link('account/account', '', 'SSL');
+		 } else {
+			$this->_templateData['status_back'] = false;
+		 }]]></add>
+		</operation> 
+	</file>
+	<!-- controller affiliate -->
+	<file path="catalog/controller/affiliate/tracking.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('affiliate/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation> 
+	</file>
+	<file path="catalog/controller/affiliate/transaction.php">
+		<operation error="skip">
+			<search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+			<add position="before"><![CDATA[		if (($this->config->get('gixocaccount_status')) && ($this->config->get('gixocaccount_back'))) {
+			$data['status_back'] = true;
+			$data['button_back'] = $this->language->get('button_back');
+			$data['back'] = $this->url->link('affiliate/account', '', true);
+		} else {
+			$data['status_back'] = false;
+		}]]></add>
+		</operation> 
+	</file>
+	<!-- fixs for Back view customer -->
+	<file path="catalog/view/theme/*/template/account/wishlist.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/account/order_list.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/account/download.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/account/reward.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/account/return_list.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/account/transaction.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/account/recurring_list.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<!-- fix for Simple view -->
+	<file path="catalog/view/theme/*/template/account/simpleedit.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="simpleregister-button-right">]]></search> 
+			<add position="before"><![CDATA[                <?php if ($status_back) { ?><div class="simpleregister-button-left">
+                    <a class="button btn-default button_oc btn" href="<?php echo $back; ?>"><span><?php echo $button_back; ?></span></a>
+                </div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<!-- fixs for Back  view affiliate -->
+	<file path="catalog/view/theme/*/template/affiliate/tracking.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/*/template/affiliate/transaction.tpl">
+		<operation error="skip">
+			<search><![CDATA[<div class="pull-right">]]></search> 
+			<add position="before"><![CDATA[          <?php if ($status_back) { ?><div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div><?php } ?>]]></add>
+		</operation>
 	</file>
 </modification>

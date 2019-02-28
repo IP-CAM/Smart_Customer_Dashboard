@@ -15,12 +15,15 @@
     </div>
     <div class="content">
       <div id="tabs" class="htabs">
-        <a href="#tab-design"><?php echo $entry_main; ?></a>
-        <a href="#tab-customer"><?php echo $entry_customer; ?></a>
-        <a href="#tab-affiliate"><?php echo $entry_affiliate; ?></a>
+        <a href="#tab-design"><?php echo $tab_design; ?></a>
+        <a href="#tab-customer"><?php echo $tab_customer; ?></a>
+        <a href="#tab-affiliate"><?php echo $tab_affiliate; ?></a>
+        <a href="#tab-module_customer"><?php echo $tab_module_customer; ?></a>
+        <a href="#tab-module_affiliate"><?php echo $tab_module_affiliate; ?></a>
       </div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         <div id="tab-design">
+          <h2><?php echo $tab_design; ?></h2>
           <table class="form">
             <tr>
               <td><?php echo $entry_status; ?></td>
@@ -30,6 +33,30 @@
                   <option value="0" <?php if (!$gixocaccount_status) { ?>selected="selected"<?php } ?>><?php echo $text_disabled; ?></option>
                 </select>
               </td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_css; ?></td>
+              <td>
+                <textarea name="gixocaccount_css" rows="5" ><?php echo $gixocaccount_css; ?></textarea>
+              </td>
+            </tr>
+          </table>
+          <h2><?php echo $text_other; ?></h2>
+          <div class="warning"><?php echo $text_test; ?></div>
+          <table class="form">
+            <tr>
+              <td><?php echo $entry_back; ?></td>
+              <td><?php if ($gixocaccount_back) { ?>
+                <input type="radio" name="gixocaccount_back" value="1" checked="checked" />
+                <?php echo $text_yes; ?>
+                <input type="radio" name="gixocaccount_back" value="0" />
+                <?php echo $text_no; ?>
+                <?php } else { ?>
+                <input type="radio" name="gixocaccount_back" value="1" />
+                <?php echo $text_yes; ?>
+                <input type="radio" name="gixocaccount_back" value="0" checked="checked" />
+                <?php echo $text_no; ?>
+                <?php } ?></td>
             </tr>
           </table>
         </div>
@@ -433,8 +460,174 @@
             </div>
           </div>
         </div>
-    </form>
-  </div>
+        <div id="tab-module_customer">
+          <div class="content">
+            <div class="buttons">
+              <a onclick="addModule_customer();" class="button"><img src="view/image/add.png" alt="<?php echo $button_el_add; ?>" />&nbsp;<?php echo $button_el_add; ?></a>  
+            </div>
+            <br />
+            <div id="module_customer">
+              <?php $module_customer_row = 0; ?>
+              <?php if ($gixocaccount_module_customer) { ?>
+              <?php foreach ($gixocaccount_module_customer as $el) { ?>
+                <div class="<?php if ($el['status']) { ?>success<?php } else { ?>warning<?php } ?>" id="module_customer-row<?php echo $module_customer_row; ?>">
+                  <div style="float:right;"  class="buttons">
+                    <a onclick="confirm('<?php echo $text_confirm; ?>') ? $('#module_customer-row<?php echo $module_customer_row; ?>').remove() : false;" class="button" style="float: right;"><img src="view/image/delete.png" alt="<?php echo $button_delete; ?>" />&nbsp;<?php echo $button_delete; ?></a>  
+                  </div>
+                  <table class="form">
+                  <input type="hidden" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][id]" value="<?php echo $module_customer_row; ?>" id="input-id_module_customer<?php echo $module_customer_row; ?>" />
+                  <tr>
+                    <td><?php echo $entry_name; ?></td>
+                    <td>
+                    <?php foreach ($languages as $language) { ?>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][name][<?php echo $language['language_id']; ?>]" value="<?php echo isset($el['name'][$language['language_id']]) ? $el['name'][$language['language_id']] : ''; ?>"  class="form-control" /><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                      <?php if (isset($error_name[$language['language_id']])) { ?>
+                      <div class="text-danger"><?php echo $error_name[$language['language_id']]; ?></div>
+                      <?php } ?>
+                    <?php } ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_class_el; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][class_el]" value="<?php echo $el['class_el']; ?>" id="input-class-el" />
+                    </td>
+                    <td><?php echo $entry_url; ?></td>
+                    <td>
+                      <?php echo $domain; ?><input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][url]" value="<?php echo $el['url']; ?>" id="input-url" class="form-control" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_color; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][color]" value="<?php echo $el['color']; ?>" id="input-color" size="6" class="color {required:false,hash:true} form-control" />
+                    </td>
+                    <td><?php echo $entry_color_hover; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][color_hover]" value="<?php echo $el['color_hover']; ?>" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_font; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][font]" size="1" value="<?php echo $el['font']; ?>" id="input-font" />px
+                    </td>
+                    <td><?php echo $entry_font_hover; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][font_hover]" size="1" value="<?php echo $el['font_hover']; ?>" id="input-font-hover" />px
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_status; ?></td>
+                    <td>
+                      <select name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][status]" id="input-status" class="form-control">
+                      <?php if ($el['status']) { ?>
+                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                        <option value="0"><?php echo $text_disabled; ?></option>
+                      <?php } else { ?>
+                        <option value="1"><?php echo $text_enabled; ?></option>
+                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                      <?php } ?>
+                      </select>
+                    </td>
+                    <td><?php echo $entry_sort_order; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_customer[<?php echo $module_customer_row; ?>][sort_order]" size="1"  value="<?php echo $el['sort_order']; ?>" id="input-sort-order" />
+                    </td>
+                  </tr>
+                </table>
+              </div>    
+              <?php $module_customer_row++; ?>
+              <?php } ?>
+              <?php } ?>   
+            </div>
+		  </div>
+		</div>
+        <div id="tab-module_affiliate">
+          <div class="content">
+            <div class="buttons">
+              <a onclick="addModule_affiliate();" class="button"><img src="view/image/add.png" alt="<?php echo $button_el_add; ?>" />&nbsp;<?php echo $button_el_add; ?></a>  
+            </div>
+            <br />
+            <div id="module_affiliate">
+              <?php $module_affiliate_row = 0; ?>
+              <?php if ($gixocaccount_module_affiliate) { ?>
+              <?php foreach ($gixocaccount_module_affiliate as $el) { ?>
+                <div class="<?php if ($el['status']) { ?>success<?php } else { ?>warning<?php } ?>" id="module_affiliate-row<?php echo $module_affiliate_row; ?>">
+                  <div style="float:right;"  class="buttons">
+                    <a onclick="confirm('<?php echo $text_confirm; ?>') ? $('#module_affiliate-row<?php echo $module_affiliate_row; ?>').remove() : false;" class="button" style="float: right;"><img src="view/image/delete.png" alt="<?php echo $button_delete; ?>" />&nbsp;<?php echo $button_delete; ?></a>  
+                  </div>
+                  <table class="form">
+                  <input type="hidden" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][id]" value="<?php echo $module_affiliate_row; ?>" id="input-id_module_affiliate<?php echo $module_affiliate_row; ?>" />
+                  <tr>
+                    <td><?php echo $entry_name; ?></td>
+                    <td>
+                    <?php foreach ($languages as $language) { ?>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][name][<?php echo $language['language_id']; ?>]" value="<?php echo isset($el['name'][$language['language_id']]) ? $el['name'][$language['language_id']] : ''; ?>"  class="form-control" /><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                      <?php if (isset($error_name[$language['language_id']])) { ?>
+                      <div class="text-danger"><?php echo $error_name[$language['language_id']]; ?></div>
+                      <?php } ?>
+                    <?php } ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_class_el; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][class_el]" value="<?php echo $el['class_el']; ?>" id="input-class-el" />
+                    </td>
+                    <td><?php echo $entry_url; ?></td>
+                    <td>
+                      <?php echo $domain; ?><input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][url]" value="<?php echo $el['url']; ?>" id="input-url" class="form-control" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_color; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][color]" value="<?php echo $el['color']; ?>" id="input-color" size="6" class="color {required:false,hash:true} form-control" />
+                    </td>
+                    <td><?php echo $entry_color_hover; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][color_hover]" value="<?php echo $el['color_hover']; ?>" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_font; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][font]" size="1" value="<?php echo $el['font']; ?>" id="input-font" />px
+                    </td>
+                    <td><?php echo $entry_font_hover; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][font_hover]" size="1" value="<?php echo $el['font_hover']; ?>" id="input-font-hover" />px
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><?php echo $entry_status; ?></td>
+                    <td>
+                      <select name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][status]" id="input-status" class="form-control">
+                      <?php if ($el['status']) { ?>
+                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                        <option value="0"><?php echo $text_disabled; ?></option>
+                      <?php } else { ?>
+                        <option value="1"><?php echo $text_enabled; ?></option>
+                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                      <?php } ?>
+                      </select>
+                    </td>
+                    <td><?php echo $entry_sort_order; ?></td>
+                    <td>
+                      <input type="text" name="gixocaccount_module_affiliate[<?php echo $module_affiliate_row; ?>][sort_order]" size="1"  value="<?php echo $el['sort_order']; ?>" id="input-sort-order" />
+                    </td>
+                  </tr>
+                </table>
+              </div>    
+              <?php $module_affiliate_row++; ?>
+              <?php } ?>
+              <?php } ?>   
+            </div>
+		  </div>
+		</div>
+      </form>
+    </div>
   </div>
 </div>
 <script type="text/javascript" src="view/javascript/jscolor/jscolor.js"></script>
@@ -493,6 +686,18 @@ $(document).ready(function() {
 <?php if (empty($gixocaccount_el_affiliate)) { ?>
 $(document).ready(function() {
     addEl_affiliate();
+});
+<?php } ?>
+
+<?php if (empty($gixocaccount_module_customer)) { ?>
+$(document).ready(function() {
+    addModule_customer();
+});
+<?php } ?>
+
+<?php if (empty($gixocaccount_module_affiliate)) { ?>
+$(document).ready(function() {
+    addModule_affiliate();
 });
 <?php } ?>
 
@@ -612,8 +817,8 @@ html += '                          <a onclick="image_upload(\'input-image_el_cus
 html += '                      </td>';
 html += '                      <td><?php echo $entry_image_description; ?></td>';
 html += '                      <td>';
-html += '                        <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][image_width]" size="1" value="<?php echo $el['image_width']; ?>" class="form-control" />X';
-html += '                        <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][image_height]" size="1" value="<?php echo $el['image_height']; ?>" class="form-control" />';
+html += '                        <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][image_width]" size="1" value="64" class="form-control" />X';
+html += '                        <input type="text" name="gixocaccount_el_customer[' + el_customer_row + '][image_height]" size="1" value="64" class="form-control" />';
 html += '                      </td>';
 html += '                    </tr>';
 html += '                    <tr>';
@@ -775,8 +980,8 @@ html += '                          <a onclick="image_upload(\'input-image_el_aff
 html += '                      </td>';
 html += '                      <td><?php echo $entry_image_description; ?></td>';
 html += '                      <td>';
-html += '                        <input type="text" name="gixocaccount_el_affiliate[' + el_affiliate_row + '][image_width]" size="1" value="<?php echo $el['image_width']; ?>" class="form-control" />X';
-html += '                        <input type="text" name="gixocaccount_el_affiliate[' + el_affiliate_row + '][image_height]" size="1" value="<?php echo $el['image_height']; ?>" class="form-control" />';
+html += '                        <input type="text" name="gixocaccount_el_affiliate[' + el_affiliate_row + '][image_width]" size="1" value="64" class="form-control" />X';
+html += '                        <input type="text" name="gixocaccount_el_affiliate[' + el_affiliate_row + '][image_height]" size="1" value="64" class="form-control" />';
 html += '                      </td>';
 html += '                    </tr>';
 html += '                    <tr>';
@@ -820,6 +1025,168 @@ html += '                </div>    ';
         scrollTop: $('#el_affiliate-row' + el_affiliate_row).offset().top
     }, 2000);
     el_affiliate_row++;
+}
+
+var module_customer_row = <?php echo $module_customer_row; ?>;
+
+function addModule_customer() {
+html = '                <div class="<?php if ($el['status']) { ?>success<?php } else { ?>warning<?php } ?>" id="module_customer-row' + module_customer_row + '">';
+html += '                  <div style="float:right;"  class="buttons">';
+html += '                    <a onclick="confirm(\'<?php echo $text_confirm; ?>\') ? $(\'#module_customer-row' + module_customer_row + '\').remove() : false;" class="button" style="float: right;"><img src="view/image/delete.png" alt="<?php echo $button_delete; ?>" />&nbsp;<?php echo $button_delete; ?></a>  ';
+html += '                  </div>';
+html += '                  <table class="form">';
+html += '                    <input type="hidden" name="gixocaccount_module_customer[' + module_customer_row + '][id]" value="' + module_customer_row + '" id="input-id_module_customer' + module_customer_row + '" />';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_name; ?></td>';
+html += '                      <td>';
+html += '                      <?php foreach ($languages as $language) { ?>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][name][<?php echo $language['language_id']; ?>]" value="" class="form-control" /><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+html += '                        <?php if (isset($error_name[$language['language_id']])) { ?>';
+html += '                        <div class="text-danger"><?php echo $error_name[$language['language_id']]; ?></div>';
+html += '                        <?php } ?>';
+html += '                      <?php } ?>';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_group; ?></td>';
+html += '                      <td>';
+html += '                        <select name="gixocaccount_module_customer[' + module_customer_row + '][customer_group_id]" id="input-gixocscd-group" class="form-control">';
+html += '                          <?php foreach ($gixocaccount_groups_customer as $customer_group) { ?>';
+html += '                            <option value="<?php echo $customer_group['id']; ?>"><?php echo $customer_group['name'][$language_id]; ?></option>';
+html += '                          <?php } ?>';
+html += '                        </select>';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_class_el; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][class_el]" value="" id="input-class-el" />';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_url; ?></td>';
+html += '                      <td>';
+html += '                        <?php echo $domain; ?><input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][url]" value="" id="input-url" class="form-control" />';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_color; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][color]" value="#000000" id="input-color" size="6" class="color {required:false,hash:true} form-control" />';
+html += '                     </td>';
+html += '                      <td><?php echo $entry_color_hover; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][color_hover]" value="#000000" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />';
+html += '                     </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_font; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][font]" size="1" value="14" id="input-font" />px';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_font_hover; ?><!-- <br><span class="help"><?php echo $help_info_font; ?></span> --></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][font_hover]" size="1" value="15" id="input-font-hover" />px';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_status; ?></td>';
+html += '                      <td>';
+html += '                        <select name="gixocaccount_module_customer[' + module_customer_row + '][status]" id="input-status" class="form-control">';
+html += '                          <option value="1"><?php echo $text_enabled; ?></option>';
+html += '                          <option value="0" selected="selected"><?php echo $text_disabled; ?></option>';
+html += '                        </select>';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_sort_order; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_customer[' + module_customer_row + '][sort_order]" size="1"  value="" id="input-sort-order" />';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                  </table>';
+html += '                </div>    ';
+
+    $('#module_customer').append(html);
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $('#module_customer-row' + module_customer_row).offset().top
+    }, 2000);
+    module_customer_row++;
+}
+
+var module_affiliate_row = <?php echo $module_affiliate_row; ?>;
+
+function addModule_affiliate() {
+html = '                <div class="<?php if ($el['status']) { ?>success<?php } else { ?>warning<?php } ?>" id="module_affiliate-row' + module_affiliate_row + '">';
+html += '                  <div style="float:right;"  class="buttons">';
+html += '                    <a onclick="confirm(\'<?php echo $text_confirm; ?>\') ? $(\'#module_affiliate-row' + module_affiliate_row + '\').remove() : false;" class="button" style="float: right;"><img src="view/image/delete.png" alt="<?php echo $button_delete; ?>" />&nbsp;<?php echo $button_delete; ?></a>  ';
+html += '                  </div>';
+html += '                  <table class="form">';
+html += '                    <input type="hidden" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][id]" value="' + module_affiliate_row + '" id="input-id_module_affiliate' + module_affiliate_row + '" />';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_name; ?></td>';
+html += '                      <td>';
+html += '                      <?php foreach ($languages as $language) { ?>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][name][<?php echo $language['language_id']; ?>]" value="" class="form-control" /><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+html += '                        <?php if (isset($error_name[$language['language_id']])) { ?>';
+html += '                        <div class="text-danger"><?php echo $error_name[$language['language_id']]; ?></div>';
+html += '                        <?php } ?>';
+html += '                      <?php } ?>';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_group; ?></td>';
+html += '                      <td>';
+html += '                        <select name="gixocaccount_module_affiliate[' + module_affiliate_row + '][customer_group_id]" id="input-gixocscd-group" class="form-control">';
+html += '                          <?php foreach ($gixocaccount_groups_customer as $customer_group) { ?>';
+html += '                            <option value="<?php echo $customer_group['id']; ?>"><?php echo $customer_group['name'][$language_id]; ?></option>';
+html += '                          <?php } ?>';
+html += '                        </select>';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_class_el; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][class_el]" value="" id="input-class-el" />';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_url; ?></td>';
+html += '                      <td>';
+html += '                        <?php echo $domain; ?><input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][url]" value="" id="input-url" class="form-control" />';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_color; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][color]" value="#000000" id="input-color" size="6" class="color {required:false,hash:true} form-control" />';
+html += '                     </td>';
+html += '                      <td><?php echo $entry_color_hover; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][color_hover]" value="#000000" id="input-color-hover"  size="6" class="color {required:false,hash:true} form-control" />';
+html += '                     </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_font; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][font]" size="1" value="14" id="input-font" />px';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_font_hover; ?><!-- <br><span class="help"><?php echo $help_info_font; ?></span> --></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][font_hover]" size="1" value="15" id="input-font-hover" />px';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                    <tr>';
+html += '                      <td><?php echo $entry_status; ?></td>';
+html += '                      <td>';
+html += '                        <select name="gixocaccount_module_affiliate[' + module_affiliate_row + '][status]" id="input-status" class="form-control">';
+html += '                          <option value="1"><?php echo $text_enabled; ?></option>';
+html += '                          <option value="0" selected="selected"><?php echo $text_disabled; ?></option>';
+html += '                        </select>';
+html += '                      </td>';
+html += '                      <td><?php echo $entry_sort_order; ?></td>';
+html += '                      <td>';
+html += '                        <input type="text" name="gixocaccount_module_affiliate[' + module_affiliate_row + '][sort_order]" size="1"  value="" id="input-sort-order" />';
+html += '                      </td>';
+html += '                    </tr>';
+html += '                  </table>';
+html += '                </div>    ';
+
+    $('#module_affiliate').append(html);
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $('#module_affiliate-row' + module_affiliate_row).offset().top
+    }, 2000);
+    module_affiliate_row++;
 }
 //--></script
 <?php echo $footer; ?>
