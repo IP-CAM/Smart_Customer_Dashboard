@@ -1,45 +1,43 @@
 # Smart Customer Dashboard
 
-Личный кабинет покупателя (и партнера) в стандартной теме Opencart (OcStore), да и в большинстве других тем, очень непритязательный. Это дополнение позволяет оформить личный кабинет по своему усмотрению.
+The personal account of the buyer (and partner) in the standard Opencart theme (OcStore), and in most other topics, is very unassuming. This add-on allows you to design your personal account at your discretion.
 
+Capabilities:
 
-***Возможности:***
+    Create custom sections (like "My Account") and menu items (like "Change your password").
 
-1) Создание произвольных разделов (вроде "Моя учетная запись") и пунктов меню (вроде "Изменить свой пароль").
+    Adding images to menu items.
 
-2) Добавление изображений к пунктам меню.
+    Choice of color, hover color, font size and font size of hover links of menu items.
 
-3) Выбор цвета, цвета при наведении, размера шрифта и размера шрифта наведении ссылок пунктов меню.
+    It is possible to indicate your link.
 
-4) Возможно указать свою ссылку.
+    It is possible to specify your own name for the menu item (multilingual).
 
-5) Возможно указать свое название пункта меню (мультиязычно).
+    It is possible to specify the css design class of the menu item for full compliance with the applied theme (template).
 
-6) Возможно указать класс оформления css пункта меню, для полного соответствия с применяемой темой (шаблоном).
+Update from 02/28/2019:
 
-*Обновление от 28.02.2019:*
+    It is possible to add your own css code
 
-7) Возможно добавить свой css код
+    It is possible to edit the modules "Account" and "Partner"
 
-8) Возможно редактировать модули "Аккаунт" и "Партнер"
+    For the standard theme, it is possible to add the missing "Back" button in the sections: "Change bookmarks", "Order history", "Downloads", "Reward points", "Return requests", "Payment history", "Regular payments" and "Referrals" '
 
-10) Для стандартной темы возможно добавить отсутствующую кнопку "Назад" в разделах: "Изменить закладки", "История заказов", "Файлы для скачивания", "Бонусные баллы", "Заявки на возврат", "История платежей", "Регулярные платежи" и "Рефералы"'
+All these settings are individual for each menu item, which allows, if necessary, to highlight some item (to make a larger image for it, a link in a different color, etc.)
 
-Все эти настройки индивидуальны для каждого пункта меню, что позволяет, при необходимости, выделить какой-то пункт (сделать большего изображение для него, другого цвета ссылку и т.д.)
+Distributed: "as is"
 
+Opencart version (ocStore): 1.5, 2.1, 2.2, 2.3, 3.0
 
- 
-*Распространяется:* ***«как есть» (as is)*** 
+Installation:
 
-*Версия Opencart (ocStore):* ***1.5, 2.1, 2.2, 2.3, 3.0***
+    For Opencart 2.x, 3.0 - standard via Add-ons installation (via built-in Ocmod). If during installation the error “FTP access must be enabled in the settings” appears - download and install the QuickFix modifier - https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=18892.
 
-*Установка:*
+    For Opencart 1.5 - just upload the contents of the Smart_Customer_Dashboard_for_oc_1_5_gixoc.zip archive to the root of the site. Also requires VQMOD installed.
 
-- Для версии Opencart 2.x, 3.0 - стандартная через Установку дополнений (через встроенный Ocmod). Если при установке появится ошибка «FTP доступ должен быть включен в настройках» - cкачайте и установите модификатор QuickFix - https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=18892.
+Removal:
 
-- Для версии Opencart 1.5 — просто загрузите содержимое архива Smart_Customer_Dashboard_for_oc_1_5_gixoc.zip в корень сайта. Также необходим установленный VQMOD.
-
-*Удаление:*
-- Отключите модификатор *GixOC.ru - Smart Customer Dashboard*
-- Отключите модуль *GixOC.ru - Настройка Личного кабинета покупателя и партнера*
-- Обновите модификаторы
+    Disable modifier GixOC.ru - Smart Customer Dashboard
+    Disable the GixOC.ru module - Configuring the Personal Account of the Buyer and Partner
+    Update modifiers
